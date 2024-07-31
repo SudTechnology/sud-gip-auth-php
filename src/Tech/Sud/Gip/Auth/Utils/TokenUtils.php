@@ -1,9 +1,10 @@
 <?php
-namespace Tech\Sud\Mgp\Auth\Utils;
+namespace Tech\Sud\Gip\Auth\Utils;
 
 use Firebase\JWT\JWT;
-use Tech\Sud\Mgp\Auth\ErrorCodeEnum;
-use Tech\Sud\Mgp\Auth\Api\SdkTokenResponse;
+use Firebase\JWT\Key;
+use Tech\Sud\Gip\Auth\ErrorCodeEnum;
+use Tech\Sud\Gip\Auth\Obj\SdkTokenResponse;
 
 class TokenUtils
 {
@@ -47,7 +48,7 @@ class TokenUtils
 
     public static function doVerify($token, $appSecret)
     {
-        JWT::decode($token, new \Firebase\JWT\Key($appSecret, 'HS256'));
+        JWT::decode($token, new Key($appSecret, 'HS256'));
     }
 
     public static function getUID($token)
@@ -63,7 +64,7 @@ class TokenUtils
     public static function doGetValueFromToken($token, $key)
     {
         try {
-            $decoded = (array) JWT::decode($token, new \Firebase\JWT\Key($appSecret, 'HS256'));
+            $decoded = (array) JWT::decode($token, new Key($appSecret, 'HS256'));
             return $decoded[$key] ?? null;
         } catch (\Exception $e) {
             return null;

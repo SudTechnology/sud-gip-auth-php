@@ -1,5 +1,5 @@
 <?php
-namespace Tech\Sud\Mgp\Auth\Utils;
+namespace Tech\Sud\Gip\Auth\Utils;
 
 use Exception;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Tech\Sud\Mgp\Auth\Api;
+namespace Tech\Sud\Gip\Auth\Obj;
 
 class SudUid
 {

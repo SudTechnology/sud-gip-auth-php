@@ -1,5 +1,5 @@
 <?php
-namespace Tech\Sud\Mgp\Auth;
+namespace Tech\Sud\Gip\Auth;
 
 class ErrorCodeEnum
 {

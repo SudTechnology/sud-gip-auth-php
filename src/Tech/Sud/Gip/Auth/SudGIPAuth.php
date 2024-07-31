@@ -1,8 +1,9 @@
 <?php
-namespace Tech\Sud\Mgp\Auth\Api;
+namespace Tech\Sud\Gip\Auth;
 
-use Tech\Sud\Mgp\Auth\ErrorCodeEnum;
-use Tech\Sud\Mgp\Auth\Utils\TokenUtils;
+use Tech\Sud\Gip\Auth\ErrorCodeEnum;
+use Tech\Sud\Gip\Auth\Utils\TokenUtils;
+use Tech\Sud\Gip\Auth\Obj\SudCode;
 
 class SudGIPAuth
 {
