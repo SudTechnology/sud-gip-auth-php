@@ -4,7 +4,7 @@ namespace Tech\Sud\Mgp\Auth\Api;
 use Tech\Sud\Mgp\Auth\ErrorCodeEnum;
 use Tech\Sud\Mgp\Auth\Utils\TokenUtils;
 
-class SudMGPAuth
+class SudGIPAuth
 {
     private $appId;
     private $appSecret;
