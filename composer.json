@@ -1,0 +1,23 @@
+{
+  "name": "sudtech/sud-gip-auth",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "SudTech",
+      "email": "dev@sud.tech"
+    }
+  ],
+  "require": {
+    "firebase/php-jwt": "^5.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Tech\\Sud\\Mgp\\": "src/Tech/Sud/Gip/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^11.2"
+  }
+}
