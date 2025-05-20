@@ -1,0 +1,17 @@
+{
+  "name": "sud/gip-auth-php",
+  "version": "1.0.0",
+  "description": "PHP implementation of Sud GIP authentication",
+  "autoload": {
+    "psr-4": {
+      "Sud\\Gip\\Auth\\": "src/Auth/",
+      "Sud\\Gip\\Auth\\Api\\": "src/Api/"
+    }
+  },
+  "require": {
+    "firebase/php-jwt": "5.5.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  }
+}
