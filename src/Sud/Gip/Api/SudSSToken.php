@@ -1,6 +1,8 @@
 <?php
 
-namespace Sud\Gip\Auth\Api;
+namespace Sud\Gip\Api;
+
+use Sud\Gip\Api\SdkTokenResponse; // 添加命名空间引用
 
 /**
  * 服务器到服务器Token类

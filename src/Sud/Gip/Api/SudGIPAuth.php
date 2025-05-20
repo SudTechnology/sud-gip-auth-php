@@ -1,6 +1,6 @@
 <?php
 
-namespace Sud\Gip\Auth\Api;
+namespace Sud\Gip\Api;
 
 use Sud\Gip\Auth\ErrorCodeEnum;
 use Sud\Gip\Auth\TokenUtils;
@@ -108,14 +108,13 @@ class SudGIPAuth
     /**
      * 获取用户ID响应
      *
-     * @param string $ssToken SSToken
+     * @param string $token 认证码或SSToken
      * @return SudUid
      */
-// src/Api/SudGIPAuth.php
-    private function getSdkUidResponse($ssToken)
+    private function getSdkUidResponse($token)
     {
         $resp = new SudUid();
-        $errorCodeEnum = $this->verifySSToken($ssToken);
+        $errorCodeEnum = $this->verifySSToken($token);
         $rs = $errorCodeEnum[0] === ErrorCodeEnum::SUCCESS[0];
         $resp->isSuccess = $rs;
 
@@ -125,7 +124,7 @@ class SudGIPAuth
         }
 
         // ✅ 传递 $this->appSecret 作为第二个参数
-        $resp->uid = TokenUtils::getUID($ssToken, $this->appSecret);
+        $resp->uid = TokenUtils::getUID($token, $this->appSecret);
         return $resp;
     }
 }

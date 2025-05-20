@@ -1,6 +1,6 @@
 <?php
 
-namespace Sud\Gip\Auth\Api;
+namespace Sud\Gip\Api;
 
 /**
  * SDK Token响应类
