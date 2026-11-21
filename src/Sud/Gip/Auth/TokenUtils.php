@@ -52,13 +52,9 @@ class TokenUtils
 
         try {
             $token = JWT::encode($payload, $appSecret, 'HS256', null, $header);
-            // 建议使用专业日志库替换 error_log
-            error_log("Generated Token: " . $token);
             return new SdkTokenResponse($token, $expireDate * 1000);
         } catch (\Exception $e) {
-            // 建议使用专业日志库替换 error_log
-            error_log("Token generation failed: " . $e->getMessage());
-            return null;
+            throw new \RuntimeException('Token generation failed.', 0, $e);
         }
     }
 
@@ -99,12 +95,8 @@ class TokenUtils
     {
         try {
             $decoded = JWT::decode($token, new Key($appSecret, 'HS256'));
-            // 建议使用专业日志库替换 error_log
-            error_log("Decoded Token: " . json_encode((array)$decoded));
             return $decoded;
         } catch (\Exception $e) {
-            // 建议使用专业日志库替换 error_log
-            error_log("Token verification failed: " . $e->getMessage());
             throw $e;
         }
     }
@@ -142,12 +134,8 @@ class TokenUtils
     {
         try {
             $decoded = JWT::decode($token, new Key($appSecret, 'HS256'));
-            // 建议使用专业日志库替换 error_log
-            error_log("Decoded token claims: " . json_encode((array)$decoded));
             return isset($decoded->$key) ? $decoded->$key : null;
         } catch (\Exception $e) {
-            // 建议使用专业日志库替换 error_log
-            error_log("Failed to decode token: " . $e->getMessage());
             throw $e; // 抛出异常以便测试捕获
         }
     }

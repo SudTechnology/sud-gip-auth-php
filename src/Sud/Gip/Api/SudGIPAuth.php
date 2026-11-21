@@ -19,6 +19,10 @@ class SudGIPAuth
 
     public function __construct($appId, $appSecret)
     {
+        if (!is_string($appSecret) || strlen($appSecret) < 32) {
+            throw new \InvalidArgumentException('HS256 AppSecret must contain at least 32 bytes.');
+        }
+
         $this->appId = $appId;
         $this->appSecret = $appSecret;
     }
