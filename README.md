@@ -93,5 +93,88 @@ if ($uidResponse->isSuccess) {
 | 9999       | Unknown error        |
 
 
+## API request signing and callback verification
+
+`Sud\Gip\Api\RequestSigner` provides HMAC-SHA1 signing independently of JWT
+operations. These helpers are available starting with SDK 2.1.0.
+
+```php
+use Sud\Gip\Api\RequestSigner;
+
+$signer = new RequestSigner($appId, $appSecret);
+
+// Serialize once. Sign these bytes and send the same string unchanged.
+$rawBody = json_encode($payload, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+$timestamp = (string) (int) floor(microtime(true) * 1000);
+$nonce = bin2hex(random_bytes(16));
+$authorization = $signer->generateAuthorization($timestamp, $nonce, $rawBody);
+
+$curl = curl_init($apiUrl);
+curl_setopt_array($curl, [
+    CURLOPT_POST => true,
+    CURLOPT_POSTFIELDS => $rawBody,
+    CURLOPT_HTTPHEADER => [
+        'Content-Type: application/json',
+        'Authorization: ' . $authorization,
+    ],
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_TIMEOUT => 15,
+]);
+// Execute the request and handle HTTP/network errors in your application.
+```
+
+The outbound example requires PHP's cURL extension. The signer itself performs
+no HTTP I/O and requires no additional package. Use the issued secret unchanged;
+this HMAC-SHA1 component does not impose the JWT HS256 32-byte minimum.
+
+`generateAuthorization()` returns a complete single-line header value:
+
+```text
+Sud-Auth app_id="...",timestamp="...",nonce="...",signature="..."
+```
+
+For a signature alone, use `$signer->generateSignature($timestamp, $nonce, $rawBody)`.
+It returns 40 lowercase hexadecimal characters. Metadata must be non-empty
+printable ASCII without spaces, quotes, backslashes, or commas. Invalid credentials
+or signing metadata throw `InvalidArgumentException` without exposing inputs.
+
+For callbacks, read the `Sud-AppId`, `Sud-Timestamp`, `Sud-Nonce`, and
+`Sud-Signature` headers and the original body, then call:
+
+```php
+$valid = $signer->verifySignature(
+    $callbackAppId,
+    $timestamp,
+    $nonce,
+    $rawBody,
+    $signature
+);
+if (!$valid) {
+    // Return an HTTP 403 response before parsing the body.
+    return;
+}
+$payload = json_decode($rawBody, true, 512, JSON_THROW_ON_ERROR);
+```
+
+`verifySignature()` checks that the callback application ID matches the configured
+ID, rejects malformed metadata/signatures, and compares decoded digests in constant
+time. It returns a boolean. HTTP header extraction, duplicate-header checks,
+route selection, and the verification switch belong to the application.
+
+**Sign and verify the ORIGINAL body bytes:**
+
+```text
+app_id + "\n" + timestamp + "\n" + nonce + "\n" + rawBody + "\n"
+```
+
+The final newline is mandatory. PHP strings preserve bytes, including binary
+values. Use an empty string for an empty body. Never deserialize/reserialize JSON,
+trim, normalize line endings, convert encodings, or decompress before verification.
+A successful callback signature check does not replace SDK JWT verification.
+
+The helpers do not enforce timestamp freshness, store nonces, or bind HTTP method,
+path, or query. Replay prevention is an application policy. Outbound API requests
+use `Authorization`; incoming callbacks use the four `Sud-*` headers above.
+
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
