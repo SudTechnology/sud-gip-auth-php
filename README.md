@@ -176,5 +176,28 @@ The helpers do not enforce timestamp freshness, store nonces, or bind HTTP metho
 path, or query. Replay prevention is an application policy. Outbound API requests
 use `Authorization`; incoming callbacks use the four `Sud-*` headers above.
 
+## App Server Config signature (ASC)
+
+Available since **v2.2.0**. Use `AscSigner::ascSign()` to calculate the ASC sign:
+
+```php
+use Sud\Gip\Api\AscSigner;
+
+$sign = AscSigner::ascSign($appId, $appSecret);
+```
+
+This returns a **32-character lowercase hexadecimal HMAC-MD5** signature.
+The message is the original UTF-8 `appId`; the key is the original UTF-8
+`appSecret`. **No newline is appended.** Do not trim, normalize, re-encode,
+or pre-hash either value. Existing whitespace is preserved.
+
+Empty or invalid UTF-8 inputs throw `InvalidArgumentException`. ASC signing
+has no JWT HS256 32-byte secret minimum; use your issued secret unchanged.
+
+ASC means **App Server Config**. This helper only calculates its sign. It does
+not send requests, construct URLs, fetch configuration, cache results, or refresh
+configuration. It is separate from `RequestSigner`, which uses HMAC-SHA1 for
+business API requests and callbacks, and from JWT authentication.
+
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
